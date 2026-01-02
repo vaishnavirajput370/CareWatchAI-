@@ -1,0 +1,41 @@
+CREATE OR REPLACE TABLE public_health_visits (
+  visit_date DATE,
+  region STRING,
+  disease STRING,
+  cases INT,
+  missing_fields INT,
+  missing_columns STRING
+);
+CREATE OR REPLACE TABLE hospital_inventory (
+  date DATE,
+  hospital STRING,
+  item STRING,
+  stock_left INT,
+  daily_usage INT
+);
+CREATE OR REPLACE DYNAMIC TABLE health_anomalies
+TARGET_LAG = '1 minute'
+WAREHOUSE = COMPUTE_WH
+AS
+SELECT *,
+CASE 
+  WHEN cases > 2 * AVG(cases) OVER (PARTITION BY disease) THEN 'YES'
+  ELSE 'NO'
+END AS is_spike
+FROM public_health_visits;
+CREATE OR REPLACE DYNAMIC TABLE inventory_health
+TARGET_LAG = '1 minute'
+WAREHOUSE = COMPUTE_WH
+AS
+SELECT *,
+CASE
+  WHEN stock_left < daily_usage * 2 THEN 'CRITICAL'
+  WHEN stock_left < daily_usage * 5 THEN 'WARNING'
+  ELSE 'SAFE'
+END AS risk_level
+FROM hospital_inventory;
+SELECT SUM(missing_fields) AS total_missing
+FROM public_health_visits;
+SELECT visit_date, region, disease, missing_columns
+FROM public_health_visits
+WHERE missing_fields > 0;
