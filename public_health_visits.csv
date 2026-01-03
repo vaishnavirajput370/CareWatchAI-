@@ -1,0 +1,7 @@
+visit_date,region,disease,cases,missing_fields
+1/1/2025,East,Maleria,10,0
+1/2/2025,East,Maleria,11,0
+1/3/2025,East,Maleria,85,2
+1/1/2025,West,Dengue,9,0
+1/2/2025,West,Dengue,10,0
+1/3/2025,West,Dengue,11,0

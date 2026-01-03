@@ -1,0 +1,5 @@
+date,hospital,item,stock_left,daily_usage
+1/1/2025,CityCare,Oxygen Cylinders,20,10
+1/1/2025,CityCare,Paracetamol,50,10
+1/1/2025,Hope,Insulin,15,10
+1/1/2025,Hope,IV Fluid,90,10
